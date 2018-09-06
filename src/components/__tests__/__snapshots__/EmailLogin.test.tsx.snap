@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmailLogin logs user in using email and password 1`] = `
+<button
+  onClick={[Function]}
+>
+  Login
+</button>
+`;

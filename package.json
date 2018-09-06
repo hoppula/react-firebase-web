@@ -1,0 +1,53 @@
+{
+  "name": "react-firebase-web",
+  "version": "1.0.0",
+  "description": "Firebase components for React",
+  "keywords": ["react", "reactjs", "firebase", "firestore"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoppula/react-firebase-web"
+  },
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "jest",
+    "clean": "rimraf lib",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "author": "Lari Hoppula",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^22.1.4",
+    "@types/react-test-renderer": "^16.0.0",
+    "@types/prop-types": "^15.5.2",
+    "firebase-mock": "^2.1.10",
+    "jest": "^22.1.4",
+    "prettier": "^1.10.2",
+    "react": "^16.3.0",
+    "react-test-renderer": "^16.3.0",
+    "rimraf": "^2.6.2",
+    "ts-jest": "^22.0.1",
+    "typescript": "^2.6.2"
+  },
+  "dependencies": {
+    "@types/lodash.findindex": "^4.6.3",
+    "@types/react": "^16.0.35",
+    "@types/react-dom": "^16.0.4",
+    "firebase": "^4.9.0",
+    "lodash.findindex": "^4.6.0",
+    "prop-types": "^15.6.0"
+  },
+  "peerDependencies": {
+    "react": ">= 16.3.0 < 17.0.0-0"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "roots": ["<rootDir>/src"]
+  }
+}

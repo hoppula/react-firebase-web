@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Value renders most recent value whenever value changes 1`] = `<div />`;
+
+exports[`Value renders most recent value whenever value changes 2`] = `
+<div>
+  Name 1
+</div>
+`;
+
+exports[`Value renders most recent value whenever value changes 3`] = `
+<div>
+  Name 2
+</div>
+`;

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User renders different content when logged in 1`] = `
+<div>
+  Login
+</div>
+`;
+
+exports[`User renders different content when logged in 2`] = `
+<div>
+  Test User
+   Logout
+</div>
+`;

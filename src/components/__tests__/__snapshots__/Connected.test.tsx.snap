@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Connected render prop value is set to true when online 1`] = `
+<div>
+  Offline :(
+</div>
+`;
+
+exports[`Connected render prop value is set to true when online 2`] = `
+<div>
+  Online :)
+</div>
+`;

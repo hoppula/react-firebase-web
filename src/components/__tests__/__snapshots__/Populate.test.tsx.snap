@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Populate populates related lists properly: all bookmarked articles should be rendered 1`] = `
+<ul>
+  <li>
+    First article
+  </li>
+  <li>
+    Second article
+  </li>
+</ul>
+`;
+
+exports[`Populate populates related lists properly: list should be empty 1`] = `<ul />`;
+
+exports[`Populate populates related lists properly: third article should have been added to bookmarks 1`] = `
+<ul>
+  <li>
+    First article
+  </li>
+  <li>
+    Second article
+  </li>
+  <li>
+    Third article
+  </li>
+</ul>
+`;
+
+exports[`Populate populates related lists properly: third article should have new title 1`] = `
+<ul>
+  <li>
+    First article
+  </li>
+  <li>
+    Second article
+  </li>
+  <li>
+    Third article with new title
+  </li>
+</ul>
+`;

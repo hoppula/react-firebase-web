@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Logout currentUser gets emptied when provided render prop function is used 1`] = `
+<button
+  onClick={[Function]}
+>
+  Logout
+</button>
+`;

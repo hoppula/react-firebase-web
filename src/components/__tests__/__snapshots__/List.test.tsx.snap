@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`List renders most recent value whenever list changes 1`] = `<ul />`;
+
+exports[`List renders most recent value whenever list changes 2`] = `
+<ul>
+  <li>
+    Name
+  </li>
+</ul>
+`;
+
+exports[`List renders most recent value whenever list changes 3`] = `
+<ul>
+  <li>
+    Name
+  </li>
+  <li>
+    Another
+  </li>
+</ul>
+`;

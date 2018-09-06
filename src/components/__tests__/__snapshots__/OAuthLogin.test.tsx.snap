@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OAuthLogin login sets auth data properly 1`] = `
+<button
+  onClick={[Function]}
+>
+  Login with Google
+</button>
+`;
