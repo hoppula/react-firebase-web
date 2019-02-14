@@ -23,14 +23,17 @@ export class Firebase extends React.Component<FirebaseProps, {}> {
   constructor(props: FirebaseProps) {
     super(props)
     const { apiKey, projectId, databaseURL } = props
-    this.firebase = firebase.initializeApp({
-      apiKey,
-      authDomain: `${projectId}.firebaseapp.com`,
-      databaseURL: databaseURL
-        ? databaseURL
-        : `https://${projectId}.firebaseio.com`,
-      storageBucket: `${projectId}.appspot.com`
-    })
+    this.firebase =
+      !firebase.apps || !firebase.apps.length
+        ? firebase.initializeApp({
+            apiKey,
+            authDomain: `${projectId}.firebaseapp.com`,
+            databaseURL: databaseURL
+              ? databaseURL
+              : `https://${projectId}.firebaseio.com`,
+            storageBucket: `${projectId}.appspot.com`
+          })
+        : firebase.app()
   }
 
   render() {
