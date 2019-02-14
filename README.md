@@ -1,6 +1,6 @@
 # react-firebase-web ☢️🔥🕸
 
-> Declarative React render props components for Firebase
+> Firebase React components with a render prop
 
 `react-firebase-web` provides useful set of React components with easy-to-use APIs to access most of Firebase's features.
 
@@ -76,7 +76,7 @@ yarn add react-firebase-web
 
 ### List
 
-&lt;List/&gt; provides given Firebase `path` as an array for given `children` render function. All array items have `key` and `value` properties. List gets re-rendered whenever there are updates to Firebase data.
+&lt;List/&gt; provides given Firebase `path` as an array for given `children` render function. All array items have `key` and `value` properties. List gets re-rendered whenever there are updates to referred Firebase data.
 
 You can provide `once` prop if you do not want realtime updates.
 
@@ -89,7 +89,9 @@ There's also `query` prop for limiting results, it accepts a function that gets 
   path="list"
   children={list => (
     <ul>
-      {list.map(({ key, value: item }) => <li key={key}>{item.name}</li>)}
+      {list.map(({ key, value: item }) => (
+        <li key={key}>{item.name}</li>
+      ))}
     </ul>
   )}
 />
@@ -97,7 +99,7 @@ There's also `query` prop for limiting results, it accepts a function that gets 
 
 ### Value
 
-&lt;Value/&gt; provides value of given Firebase `path` as an object for given `children` render function. Value gets re-rendered whenever there are updates to Firebase data.
+&lt;Value/&gt; provides value of given Firebase `path` as an object for given `children` render function. Value gets re-rendered whenever there are updates to referred Firebase data.
 
 You can provide `once` prop if you do not want realtime updates.
 
@@ -111,7 +113,7 @@ You can provide `once` prop if you do not want realtime updates.
 
 &lt;Populate/&gt; takes `from` prop (object with shape `{key1: true, key2: true, ...}`) and populates an array of related objects using `with` prop (function with key, `` key => `relatedPath/${key}` ``) for given `children` render function.
 
-All array items have `key` and `value` properties. Populate gets re-rendered whenever there are updates to Firebase data.
+All array items have `key` and `value` properties. Populate gets re-rendered whenever there are updates to referred Firebase data.
 
 #### Usage
 
@@ -203,9 +205,9 @@ All array items have `key` and `value` properties. Populate gets re-rendered whe
 
 &lt;EmailLogin/&gt; logs user in using Firebase Auth's `signInWithEmailAndPassword` method.
 
-It provides `submit` function for given `children` render function.
+Given `children` render function receives single parameter, a function that logs user in.
 
-Submit function accepts `email` and `password` as params and returns a `Promise`.
+That function accepts `email` and `password` as params and returns a `Promise`.
 
 #### Usage
 
@@ -221,9 +223,9 @@ Submit function accepts `email` and `password` as params and returns a `Promise`
 
 &lt;Registration/&gt; registers new user using Firebase Auth's `createUserWithEmailAndPassword` method.
 
-It provides `register` function for given `children` render function.
+Given `children` render function receives single parameter, a function that creates new user.
 
-Register function accepts `email` and `password` as params and returns a `Promise`.
+That function accepts `email` and `password` as params and returns a `Promise`.
 
 #### Usage
 
@@ -239,11 +241,11 @@ Register function accepts `email` and `password` as params and returns a `Promis
 
 ### ResetPassword
 
-&lt;ResetPassword/&gt; sends password reset email using Firebase Auth's `sendPasswordResetEmail` method.
+&lt;ResetPassword/&gt; sends password reset e-mail using Firebase Auth's `sendPasswordResetEmail` method.
 
-It provides `sendResetEmail` function for given `children` render function.
+Given `children` render function receives single parameter, a function that sends password reset e-mail.
 
-Send reset email function accepts `email` as param and returns a `Promise`.
+That function accepts `email` as a param and returns a `Promise`.
 
 #### Usage
 
@@ -261,9 +263,7 @@ Send reset email function accepts `email` as param and returns a `Promise`.
 
 &lt;Upload/&gt; is a component that uploads files to Firebase storage.
 
-Given `children` render function receives an object with `uploadFiles` function and `uploads` array of uploaded files.
-
-`onUpload` prop function is called when upload completes, it receives upload snapshot and rootRef, so you can store reference to uploaded files to some other location in Firebase.
+`onUpload` prop function is called when upload completes. It receives upload snapshot and rootRef, so you can store references to uploaded files to some other location in your Firebase database.
 
 ```javascript
 onComplete = (snapshot, rootRef) => {
@@ -275,9 +275,15 @@ onComplete = (snapshot, rootRef) => {
 
 `path` prop defines where uploaded files should be stored.
 
+`children` render function receives an object with:
+
+- `uploadFiles` a function that uploads the provided files, can be used directly as `react-dropzone`'s `onDrop` callback prop.
+
+- `uploads` array of user's uploaded files.
+
 The example below uses `react-dropzone`.
 
-**NOTE:** Remember to enable Firebase storage first.
+**NOTE:** Remember to enable Firebase storage in your Firebase control panel before using Upload component.
 
 #### Usage
 
@@ -306,7 +312,7 @@ The example below uses `react-dropzone`.
 
 ### Download
 
-&lt;Download/&gt; allows you to get download url for provided Firebase Storage reference. Given `children` render function receives object with `url` property.
+&lt;Download/&gt; allows you to get download url for provided Firebase Storage reference. Given `children` render function receives an object with `url` property.
 
 If you set `metadata` prop as true, provided object will also include `metadata` object, which includes file metadata, such as `contentType`.
 

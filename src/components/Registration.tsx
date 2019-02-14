@@ -1,11 +1,16 @@
-import * as PropTypes from "prop-types"
-import * as React from "react"
-import { FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
 
 export interface RegistrationProps {
   readonly children: (
-    submit: (email: string, password: string) => Promise<any>
-  ) => React.ReactElement<any>
+    submit: (
+      email: string,
+      password: string
+    ) => Promise<firebase.auth.UserCredential>
+  ) => React.ReactNode
+  readonly firebase?: firebase.app.App
 }
 
 export class Registration extends React.Component<RegistrationProps, {}> {
@@ -13,14 +18,8 @@ export class Registration extends React.Component<RegistrationProps, {}> {
     children: PropTypes.func.isRequired
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
-  context: FirebaseContext
-
   submit = (email: string, password: string) => {
-    return this.context.firebase
+    return this.props.firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
   }
@@ -30,4 +29,10 @@ export class Registration extends React.Component<RegistrationProps, {}> {
   }
 }
 
-export default Registration
+export default function RegistrationFirebase(props: RegistrationProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <Registration {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

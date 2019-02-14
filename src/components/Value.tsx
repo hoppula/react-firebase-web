@@ -1,13 +1,14 @@
-import * as firebase from "firebase"
-import * as PropTypes from "prop-types"
-import * as React from "react"
-
-import { FirebaseCallback, FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
+import { FirebaseCallback, RefType } from "../types"
 
 export interface ValueProps {
   readonly once?: boolean
   readonly path: string
-  readonly children: (value: any) => React.ReactElement<any>
+  readonly children?: (value: any) => React.ReactNode
+  readonly firebase?: firebase.app.App
 }
 
 export interface ValueState {
@@ -18,19 +19,14 @@ export class Value extends React.Component<ValueProps, ValueState> {
   static propTypes = {
     once: PropTypes.bool,
     path: PropTypes.string.isRequired,
-    children: PropTypes.func.isRequired
-  }
-
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
+    children: PropTypes.func
   }
 
   static defaultProps = {
     once: false
   }
 
-  context: FirebaseContext
-  private ref: firebase.database.Reference
+  private ref: RefType
   private listeners: {
     value: FirebaseCallback
   }
@@ -52,10 +48,10 @@ export class Value extends React.Component<ValueProps, ValueState> {
   }
 
   createRef(path: string) {
-    return this.context.firebase.database().ref(path)
+    return this.props.firebase.database().ref(path)
   }
 
-  addListeners(ref: firebase.database.Reference, once: boolean) {
+  addListeners(ref: RefType, once: boolean) {
     const listeners = this.listeners
 
     // listen only once if once prop has been passed
@@ -89,8 +85,10 @@ export class Value extends React.Component<ValueProps, ValueState> {
     const { path: prevPath, once: prevOnce } = prevProps
     if (path !== prevPath || once !== prevOnce) {
       this.removeListeners()
-      this.ref = this.createRef(path)
-      this.addListeners(this.ref, once)
+      this.setState({ value: {} }, () => {
+        this.ref = this.createRef(path)
+        this.addListeners(this.ref, once)
+      })
     }
   }
 
@@ -103,4 +101,10 @@ export class Value extends React.Component<ValueProps, ValueState> {
   }
 }
 
-export default Value
+export default function ValueFirebase(props: ValueProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <Value {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

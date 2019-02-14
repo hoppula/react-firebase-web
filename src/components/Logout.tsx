@@ -1,9 +1,11 @@
-import * as PropTypes from "prop-types"
-import * as React from "react"
-import { FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
 
 export interface LogoutProps {
-  readonly children: (logout: () => Promise<any>) => React.ReactElement<any>
+  readonly children: (logout: () => Promise<void>) => React.ReactNode
+  readonly firebase?: firebase.app.App
 }
 
 export class Logout extends React.Component<LogoutProps, {}> {
@@ -11,14 +13,8 @@ export class Logout extends React.Component<LogoutProps, {}> {
     children: PropTypes.func.isRequired
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
-  context: FirebaseContext
-
   logout = () => {
-    return this.context.firebase.auth().signOut()
+    return this.props.firebase.auth().signOut()
   }
 
   render() {
@@ -26,4 +22,10 @@ export class Logout extends React.Component<LogoutProps, {}> {
   }
 }
 
-export default Logout
+export default function LogoutFirebase(props: LogoutProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <Logout {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

@@ -1,13 +1,13 @@
-import * as React from "react"
-import * as firebase from "firebase"
-import * as renderer from "react-test-renderer"
+import React from "react"
+import firebase from "firebase/app"
+import renderer from "react-test-renderer"
 import { Firebase } from "../Firebase"
-import { List } from "../List"
+import List from "../List"
 
 import { initializeMockSDK } from "./setup"
 const mocksdk = initializeMockSDK()
 
-jest.mock("firebase", () => {
+jest.mock("firebase/app", () => {
   return {
     initializeApp: (...args) => mocksdk.initializeApp(...args)
   }

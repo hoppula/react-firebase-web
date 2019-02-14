@@ -1,10 +1,8 @@
-import * as firebase from "firebase"
+import firebase from "firebase/app"
 
 export type FirebaseCallback = (
   a: firebase.database.DataSnapshot | null,
   b?: string
 ) => any
 
-export interface FirebaseContext {
-  firebase: firebase.app.App
-}
+export type RefType = firebase.database.Reference | firebase.database.Query

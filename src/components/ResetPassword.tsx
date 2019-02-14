@@ -1,11 +1,13 @@
-import * as PropTypes from "prop-types"
-import * as React from "react"
-import { FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
 
 export interface ResetPasswordProps {
   readonly children: (
-    resetPassword: (email: string) => Promise<any>
-  ) => React.ReactElement<any>
+    resetPassword: (email: string) => Promise<void>
+  ) => React.ReactNode
+  readonly firebase?: firebase.app.App
 }
 
 export class ResetPassword extends React.Component<ResetPasswordProps, {}> {
@@ -13,14 +15,8 @@ export class ResetPassword extends React.Component<ResetPasswordProps, {}> {
     children: PropTypes.func.isRequired
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
-  context: FirebaseContext
-
   resetPassword = (email: string) => {
-    return this.context.firebase.auth().sendPasswordResetEmail(email)
+    return this.props.firebase.auth().sendPasswordResetEmail(email)
   }
 
   render() {
@@ -28,4 +24,10 @@ export class ResetPassword extends React.Component<ResetPasswordProps, {}> {
   }
 }
 
-export default ResetPassword
+export default function ResetPasswordFirebase(props: ResetPasswordProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <ResetPassword {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

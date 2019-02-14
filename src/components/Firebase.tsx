@@ -1,6 +1,9 @@
-import * as firebase from "firebase"
-import * as PropTypes from "prop-types"
-import * as React from "react"
+import firebase from "firebase/app"
+import "firebase/auth"
+import "firebase/database"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
 
 export interface FirebaseProps {
   readonly apiKey: string
@@ -13,10 +16,6 @@ export class Firebase extends React.Component<FirebaseProps, {}> {
     apiKey: PropTypes.string.isRequired,
     databaseURL: PropTypes.string,
     projectId: PropTypes.string.isRequired
-  }
-
-  static childContextTypes = {
-    firebase: PropTypes.object
   }
 
   firebase: firebase.app.App
@@ -34,14 +33,12 @@ export class Firebase extends React.Component<FirebaseProps, {}> {
     })
   }
 
-  getChildContext() {
-    return {
-      firebase: this.firebase
-    }
-  }
-
   render() {
-    return React.Children.only(this.props.children)
+    return (
+      <FirebaseContext.Provider value={this.firebase}>
+        {this.props.children}
+      </FirebaseContext.Provider>
+    )
   }
 }
 

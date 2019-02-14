@@ -1,14 +1,15 @@
-import * as firebase from "firebase"
-import * as PropTypes from "prop-types"
-import * as React from "react"
-import { FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
 
 export interface WriteProps {
   readonly method: "push" | "set" | "update" | "transaction"
   readonly children: (
     submit: (value: any) => Promise<any> | firebase.database.ThenableReference
-  ) => React.ReactElement<any>
+  ) => React.ReactNode
   readonly to: string
+  readonly firebase?: firebase.app.App
 }
 
 export class Write extends React.Component<WriteProps, {}> {
@@ -18,28 +19,22 @@ export class Write extends React.Component<WriteProps, {}> {
     to: PropTypes.string
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
-  context: FirebaseContext
-
   push = (value?: any, onComplete?: (a: Error | null) => any) => {
-    return this.context.firebase
+    return this.props.firebase
       .database()
       .ref(this.props.to)
       .push(value, onComplete)
   }
 
   set = (value?: any, onComplete?: (a: Error | null) => any) => {
-    return this.context.firebase
+    return this.props.firebase
       .database()
       .ref(this.props.to)
       .set(value, onComplete)
   }
 
   update = (value: Object, onComplete?: (a: Error | null) => any) => {
-    return this.context.firebase
+    return this.props.firebase
       .database()
       .ref(this.props.to)
       .update(value, onComplete)
@@ -54,7 +49,7 @@ export class Write extends React.Component<WriteProps, {}> {
     ) => any,
     applyLocally?: boolean
   ) => {
-    return this.context.firebase
+    return this.props.firebase
       .database()
       .ref(this.props.to)
       .transaction(value, onComplete, applyLocally)
@@ -65,4 +60,10 @@ export class Write extends React.Component<WriteProps, {}> {
   }
 }
 
-export default Write
+export default function WriteFirebase(props: WriteProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <Write {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

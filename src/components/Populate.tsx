@@ -1,15 +1,17 @@
-import * as firebase from "firebase"
-import * as PropTypes from "prop-types"
-import * as React from "react"
+import firebase from "firebase/app"
+import PropTypes from "prop-types"
+import React from "react"
 import findIndex = require("lodash.findindex")
-import { FirebaseCallback, FirebaseContext } from "../types"
+import { FirebaseCallback } from "../types"
+import { FirebaseContext } from "./FirebaseContext"
 
 export type KeyValue = { key: string; value: any }
 
 export interface PopulateProps {
   readonly from: { [key: string]: boolean }
-  readonly children: (value: any) => React.ReactElement<any>
+  readonly children?: (value: any) => React.ReactNode
   readonly with: (key: string) => string
+  readonly firebase?: firebase.app.App
 }
 
 export interface PopulateState {
@@ -19,15 +21,10 @@ export interface PopulateState {
 export class Populate extends React.Component<PopulateProps, PopulateState> {
   static propTypes = {
     from: PropTypes.any,
-    children: PropTypes.func.isRequired,
+    children: PropTypes.func,
     with: PropTypes.func.isRequired
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
-  context: FirebaseContext
   listeners: {
     ref: firebase.database.Reference
     callback: FirebaseCallback
@@ -38,17 +35,14 @@ export class Populate extends React.Component<PopulateProps, PopulateState> {
   }
 
   componentDidMount() {
-    const { from, with: populateWith } = this.props
-    this.addListeners(from, populateWith)
+    this.addListeners()
   }
 
-  addListeners(
-    from: { [key: string]: boolean },
-    populateWith: (key: string) => string
-  ) {
+  addListeners() {
+    const { from, with: populateWith } = this.props
     const keys = Object.keys(from || {})
     const refs = keys.map(key => {
-      return this.context.firebase.database().ref(populateWith(key))
+      return this.props.firebase.database().ref(populateWith(key))
     })
     this.listeners = refs.map(ref => {
       return {
@@ -81,7 +75,9 @@ export class Populate extends React.Component<PopulateProps, PopulateState> {
     const { from: prevFrom, with: prevWith } = prevProps
     if (from !== prevFrom || populateWith !== prevWith) {
       this.removeListeners()
-      this.addListeners(from, populateWith)
+      this.setState({ value: [] }, () => {
+        this.addListeners()
+      })
     }
   }
 
@@ -94,4 +90,10 @@ export class Populate extends React.Component<PopulateProps, PopulateState> {
   }
 }
 
-export default Populate
+export default function PopulateFirebase(props: PopulateProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <Populate {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

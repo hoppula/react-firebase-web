@@ -1,13 +1,14 @@
-import * as firebase from "firebase"
-import * as PropTypes from "prop-types"
-import * as React from "react"
+import firebase from "firebase/app"
+import PropTypes from "prop-types"
+import React from "react"
 import {
   childAdded,
   childChanged,
   childMoved,
   childRemoved
 } from "../stateReducers"
-import { FirebaseCallback, FirebaseContext } from "../types"
+import { FirebaseCallback, RefType } from "../types"
+import { FirebaseContext } from "./FirebaseContext"
 
 export type FirebaseEventType =
   | "child_added"
@@ -18,10 +19,9 @@ export type FirebaseEventType =
 export interface ListProps {
   readonly once?: boolean
   readonly path: string
-  readonly query?: (
-    ref: firebase.database.Reference
-  ) => firebase.database.Reference
-  readonly children: (value: any[]) => React.ReactElement<any>
+  readonly query?: (ref: firebase.database.Reference) => RefType
+  readonly children?: (value: any) => React.ReactNode
+  readonly firebase?: firebase.app.App
 }
 
 export interface ListState {
@@ -33,19 +33,14 @@ export class List extends React.Component<ListProps, ListState> {
     once: PropTypes.bool,
     path: PropTypes.string.isRequired,
     query: PropTypes.func,
-    children: PropTypes.func.isRequired
-  }
-
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
+    children: PropTypes.func
   }
 
   static defaultProps = {
     once: false
   }
 
-  context: FirebaseContext
-  private ref: firebase.database.Reference
+  private ref: RefType
   private listeners: {
     child_added: FirebaseCallback
     child_changed: FirebaseCallback
@@ -74,13 +69,13 @@ export class List extends React.Component<ListProps, ListState> {
 
   createRef(
     path: string,
-    query: (ref: firebase.database.Reference) => firebase.database.Reference
+    query: (ref: firebase.database.Reference) => RefType
   ) {
-    const ref = this.context.firebase.database().ref(path)
+    const ref = this.props.firebase.database().ref(path)
     return query ? query(ref) : ref
   }
 
-  addListeners(ref: firebase.database.Reference, once: boolean) {
+  addListeners(ref: RefType, once: boolean) {
     const listeners = this.listeners
 
     // listen only once if once prop has been passed
@@ -158,8 +153,10 @@ export class List extends React.Component<ListProps, ListState> {
     const { query: prevQuery, path: prevPath, once: prevOnce } = prevProps
     if (query !== prevQuery || path !== prevPath || once !== prevOnce) {
       this.removeListeners()
-      this.ref = this.createRef(path, query)
-      this.addListeners(this.ref, once)
+      this.setState({ value: [] }, () => {
+        this.ref = this.createRef(path, query)
+        this.addListeners(this.ref, once)
+      })
     }
   }
 
@@ -172,4 +169,10 @@ export class List extends React.Component<ListProps, ListState> {
   }
 }
 
-export default List
+export default function ListFirebase(props: ListProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <List {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

@@ -1,7 +1,8 @@
-import * as firebase from "firebase"
-import * as PropTypes from "prop-types"
-import * as React from "react"
-import { FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import "firebase/storage"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
 
 export type FilesUpload = File[] // TODO: Uint8Array & string support
 
@@ -24,8 +25,9 @@ export interface UploadProps {
     rootRef: firebase.database.Reference
   ) => void
   readonly path: string
-  readonly children: (props: RenderProps) => React.ReactElement<any>
+  readonly children: (props: RenderProps) => React.ReactNode
   // TODO: stringFormat?: "raw" | "base64" | "base64url" | "data_url"
+  readonly firebase?: firebase.app.App
 }
 
 export interface UploadState {
@@ -40,11 +42,6 @@ export class Upload extends React.Component<UploadProps, UploadState> {
     // TODO: stringFormat: PropTypes.string
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
-  context: FirebaseContext
   state: UploadState = { uploadResults: [] }
 
   componentWillUnmount() {
@@ -78,8 +75,7 @@ export class Upload extends React.Component<UploadProps, UploadState> {
 
   uploadFile = (file: File, update: (changes: UploadResult) => void) => {
     const { onUpload, path } = this.props
-    const { firebase: firebaseInstance } = this.context
-    const storageRef = firebaseInstance.storage()
+    const storageRef = this.props.firebase.storage()
     const uploadTask = storageRef.ref(`${path}/${file.name}`).put(file)
     update({ task: uploadTask })
 
@@ -94,7 +90,7 @@ export class Upload extends React.Component<UploadProps, UploadState> {
       () => {
         update({ snapshot: uploadTask.snapshot, success: true })
         if (onUpload) {
-          onUpload(uploadTask.snapshot, firebaseInstance.database().ref())
+          onUpload(uploadTask.snapshot, this.props.firebase.database().ref())
         }
       }
     )
@@ -116,4 +112,10 @@ export class Upload extends React.Component<UploadProps, UploadState> {
   }
 }
 
-export default Upload
+export default function UploadFirebase(props: UploadProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <Upload {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

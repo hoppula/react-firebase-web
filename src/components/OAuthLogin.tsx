@@ -1,7 +1,7 @@
-import * as firebase from "firebase"
-import * as PropTypes from "prop-types"
-import * as React from "react"
-import { FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
 
 export interface AuthProviders {
   facebook: "FacebookAuthProvider"
@@ -31,9 +31,10 @@ export interface OAuthProps {
   readonly flow?: "popup" | "redirect"
   readonly provider: "facebook" | "google" | "twitter" | "github"
   readonly children: (
-    authenticate: () => Promise<any>
-  ) => React.ReactElement<any>
+    authenticate: () => Promise<firebase.auth.UserCredential> | Promise<void>
+  ) => React.ReactNode
   readonly scopes?: string[]
+  readonly firebase?: firebase.app.App
 }
 
 export class OAuthLogin extends React.Component<OAuthProps, {}> {
@@ -44,15 +45,9 @@ export class OAuthLogin extends React.Component<OAuthProps, {}> {
     scopes: PropTypes.array
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
   static defaultProps = {
     flow: "popup"
   }
-
-  context: FirebaseContext
 
   authenticate = () => {
     const { flow, provider, scopes = [] } = this.props
@@ -66,7 +61,7 @@ export class OAuthLogin extends React.Component<OAuthProps, {}> {
         authProvider.addScope(scope)
       })
     }
-    return this.context.firebase.auth()[authFlows[flow]](authProvider)
+    return this.props.firebase.auth()[authFlows[flow]](authProvider)
   }
 
   render() {
@@ -74,4 +69,10 @@ export class OAuthLogin extends React.Component<OAuthProps, {}> {
   }
 }
 
-export default OAuthLogin
+export default function OAuthLoginFirebase(props: OAuthProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <OAuthLogin {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

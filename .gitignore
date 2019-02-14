@@ -1,4 +1,5 @@
 .vscode
 lib
+lib-esm
 node_modules
 TODO

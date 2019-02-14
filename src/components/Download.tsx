@@ -1,12 +1,14 @@
-import * as firebase from "firebase"
-import * as PropTypes from "prop-types"
-import * as React from "react"
-import { FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import "firebase/storage"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
 
 export interface DownloadProps {
   readonly path: string
   readonly metadata?: boolean
-  readonly children: (props: DownloadState) => React.ReactElement<any>
+  readonly children: (props: DownloadState) => React.ReactNode
+  readonly firebase?: firebase.app.App
 }
 
 export interface DownloadState {
@@ -22,11 +24,6 @@ export class Download extends React.Component<DownloadProps, DownloadState> {
     children: PropTypes.func.isRequired
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
-  context: FirebaseContext
   state: DownloadState = { url: "", metadata: {}, error: "" }
 
   componentDidMount() {
@@ -41,7 +38,7 @@ export class Download extends React.Component<DownloadProps, DownloadState> {
 
   download = () => {
     const { metadata, path } = this.props
-    const storage = this.context.firebase.storage()
+    const storage = this.props.firebase.storage()
     const storageRef = storage.refFromURL(path)
     Promise.all([
       storageRef.getDownloadURL(),
@@ -60,4 +57,10 @@ export class Download extends React.Component<DownloadProps, DownloadState> {
   }
 }
 
-export default Download
+export default function DownloadFirebase(props: DownloadProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <Download {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

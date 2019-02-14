@@ -1,9 +1,11 @@
-import * as PropTypes from "prop-types"
-import * as React from "react"
-import { FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import React from "react"
+import PropTypes from "prop-types"
+import { FirebaseContext } from "./FirebaseContext"
 
 export interface ConnectedProps {
-  readonly children: (connected: boolean) => React.ReactElement<any>
+  readonly children: (connected: boolean) => React.ReactNode
+  readonly firebase?: firebase.app.App
 }
 
 export interface ConnectedState {
@@ -15,15 +17,10 @@ export class Connected extends React.Component<ConnectedProps, ConnectedState> {
     children: PropTypes.func.isRequired
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
-  context: FirebaseContext
   state: ConnectedState = { connected: false }
 
   componentDidMount() {
-    this.context.firebase
+    this.props.firebase
       .database()
       .ref(".info/connected")
       .on("value", snap => {
@@ -36,4 +33,10 @@ export class Connected extends React.Component<ConnectedProps, ConnectedState> {
   }
 }
 
-export default Connected
+export default function ConnectedFirebase(props: ConnectedProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <Connected {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}

@@ -1,11 +1,12 @@
-import * as firebase from "firebase"
-import * as PropTypes from "prop-types"
-import * as React from "react"
-import { FirebaseContext } from "../types"
+import firebase from "firebase/app"
+import PropTypes from "prop-types"
+import React from "react"
+import { FirebaseContext } from "./FirebaseContext"
 
 export interface UserProps {
   readonly mapUser?: (user: any) => any
-  readonly children: (user: any) => React.ReactElement<any>
+  readonly children: (user: any) => React.ReactNode
+  readonly firebase?: firebase.app.App
 }
 
 export interface UserState {
@@ -14,31 +15,28 @@ export interface UserState {
 
 export class User extends React.Component<UserProps, UserState> {
   static propTypes = {
-    mapAuth: PropTypes.func,
+    mapUser: PropTypes.func,
     children: PropTypes.func.isRequired
   }
 
-  static contextTypes = {
-    firebase: PropTypes.object.isRequired
-  }
-
-  unsubscribe: firebase.Unsubscribe
-
-  context: FirebaseContext
   state = {
     user: {}
   }
 
+  unsubscribe: firebase.Unsubscribe
+
   componentDidMount() {
     const { mapUser } = this.props
-    this.unsubscribe = this.context.firebase
+    this.unsubscribe = this.props.firebase
       .auth()
       .onAuthStateChanged((authData: firebase.User) => {
         this.setState({
           user:
             mapUser && authData
               ? mapUser(authData.toJSON())
-              : authData ? authData.toJSON() : {}
+              : authData
+                ? authData.toJSON()
+                : {}
         })
       })
   }
@@ -52,4 +50,10 @@ export class User extends React.Component<UserProps, UserState> {
   }
 }
 
-export default User
+export default function UserFirebase(props: UserProps) {
+  return (
+    <FirebaseContext.Consumer>
+      {firebase => <User {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  )
+}
