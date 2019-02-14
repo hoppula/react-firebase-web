@@ -8,7 +8,7 @@ const mocksdk = initializeMockSDK()
 
 jest.mock("firebase/app", () => {
   return {
-    initializeApp: (...args) => mocksdk.initializeApp(...args)
+    initializeApp: (...args: any[]) => mocksdk.initializeApp(...args)
   }
 })
 
@@ -141,7 +141,7 @@ describe("Write", () => {
           to="likes"
           children={updateLikes => {
             return (
-              <button onClick={() => updateLikes(likes => likes + 1)}>
+              <button onClick={() => updateLikes((likes: number) => likes + 1)}>
                 Update likes
               </button>
             )

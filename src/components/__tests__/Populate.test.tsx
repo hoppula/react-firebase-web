@@ -1,5 +1,4 @@
 import React from "react"
-import firebase from "firebase/app"
 import renderer from "react-test-renderer"
 import { Firebase } from "../Firebase"
 import Populate from "../Populate"
@@ -10,7 +9,7 @@ const mocksdk = initializeMockSDK()
 
 jest.mock("firebase/app", () => {
   return {
-    initializeApp: (...args) => mocksdk.initializeApp(...args)
+    initializeApp: (...args: any[]) => mocksdk.initializeApp(...args)
   }
 })
 
@@ -28,9 +27,17 @@ describe("Populate", () => {
                 with={articledId => `articles/${articledId}`}
                 children={list => (
                   <ul>
-                    {list.map(({ key, value: article }) => (
-                      <li key={key}>{article.title}</li>
-                    ))}
+                    {list.map(
+                      ({
+                        key,
+                        value: article
+                      }: {
+                        key: string
+                        value: any
+                      }) => (
+                        <li key={key}>{article.title}</li>
+                      )
+                    )}
                   </ul>
                 )}
               />

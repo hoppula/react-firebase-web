@@ -8,7 +8,7 @@ const mocksdk = initializeMockSDK()
 
 jest.mock("firebase/app", () => {
   return {
-    initializeApp: (...args) => mocksdk.initializeApp(...args)
+    initializeApp: (...args: any[]) => mocksdk.initializeApp(...args)
   }
 })
 

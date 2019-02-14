@@ -11,7 +11,7 @@ declare module "react-test-renderer" {
 
 export const initializeMockSDK = () => {
   return new firebasemock.MockFirebaseSdk(
-    path => {
+    (path: string) => {
       return path ? mockdatabase.child(path) : mockdatabase
     },
     () => {

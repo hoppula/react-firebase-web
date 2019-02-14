@@ -1,5 +1,4 @@
 import React from "react"
-import firebase from "firebase/app"
 import renderer from "react-test-renderer"
 import { Firebase } from "../Firebase"
 import List from "../List"
@@ -9,7 +8,7 @@ const mocksdk = initializeMockSDK()
 
 jest.mock("firebase/app", () => {
   return {
-    initializeApp: (...args) => mocksdk.initializeApp(...args)
+    initializeApp: (...args: any[]) => mocksdk.initializeApp(...args)
   }
 })
 
@@ -21,7 +20,7 @@ describe("List", () => {
           path="list"
           children={list => (
             <ul>
-              {list.map(({ key, value: item }) => (
+              {list.map(({ key, value: item }: { key: string; value: any }) => (
                 <li key={key}>{item.name}</li>
               ))}
             </ul>
