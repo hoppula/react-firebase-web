@@ -9,23 +9,26 @@ export interface FirebaseProps {
   readonly apiKey: string
   readonly projectId: string
   readonly databaseURL?: string
+  readonly firebase?: any // TODO: allow firebase or firebase-mock
 }
 
 export class Firebase extends React.Component<FirebaseProps, {}> {
   static propTypes = {
     apiKey: PropTypes.string.isRequired,
     databaseURL: PropTypes.string,
-    projectId: PropTypes.string.isRequired
+    projectId: PropTypes.string.isRequired,
+    firebase: PropTypes.object
   }
 
   firebase: firebase.app.App
 
   constructor(props: FirebaseProps) {
     super(props)
-    const { apiKey, projectId, databaseURL } = props
+    const { apiKey, projectId, databaseURL, firebase: propsFirebase } = props
+    const firebaseImplementation = propsFirebase ? propsFirebase : firebase
     this.firebase =
-      !firebase.apps || !firebase.apps.length
-        ? firebase.initializeApp({
+      !firebaseImplementation.apps || !firebaseImplementation.apps.length
+        ? firebaseImplementation.initializeApp({
             apiKey,
             authDomain: `${projectId}.firebaseapp.com`,
             databaseURL: databaseURL
@@ -33,7 +36,7 @@ export class Firebase extends React.Component<FirebaseProps, {}> {
               : `https://${projectId}.firebaseio.com`,
             storageBucket: `${projectId}.appspot.com`
           })
-        : firebase.app()
+        : firebaseImplementation.app()
   }
 
   render() {
