@@ -24,17 +24,17 @@
   "author": "Lari Hoppula",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^23.3.1",
+    "@types/jest": "^24.0.6",
     "@types/node": "^11.9.3",
     "@types/prop-types": "^15.5.9",
     "@types/react-test-renderer": "^16.8.1",
     "firebase-mock": "^2.2.10",
-    "jest": "^23.5.0",
+    "jest": "^24.1.0",
     "prettier": "^1.16.4",
     "react": "^16.8.1",
     "react-test-renderer": "^16.8.1",
     "rimraf": "^2.6.3",
-    "ts-jest": "^23.1.4",
+    "ts-jest": "^24.0.0",
     "typescript": "^3.3.3"
   },
   "dependencies": {
@@ -49,15 +49,8 @@
     "react": ">= 16.3.0 < 17.0.0-0"
   },
   "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
+    "preset": "ts-jest",
     "testRegex": "(/__tests__/|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
     "roots": [
       "<rootDir>/src"
     ]
