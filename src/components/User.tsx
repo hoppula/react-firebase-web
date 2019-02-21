@@ -35,8 +35,8 @@ export class User extends React.Component<UserProps, UserState> {
             mapUser && authData
               ? mapUser(authData.toJSON())
               : authData
-                ? authData.toJSON()
-                : {}
+              ? authData.toJSON()
+              : {}
         })
       })
   }

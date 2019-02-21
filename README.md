@@ -1,6 +1,6 @@
 # react-firebase-web ☢️🔥🕸
 
-> Firebase React components with a render prop
+> React Firebase components with render props
 
 `react-firebase-web` provides useful set of React components with easy-to-use APIs to access most of Firebase's features.
 
@@ -45,6 +45,10 @@ yarn add react-firebase-web
   </Write>
 </Firebase>
 ```
+
+## Codesandbox examples
+
+- Coming soon
 
 ## Components
 

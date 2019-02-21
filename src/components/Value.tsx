@@ -34,7 +34,7 @@ export class Value extends React.Component<ValueProps, ValueState> {
   constructor(props: ValueProps) {
     super(props)
     this.state = {
-      value: {}
+      value: null
     }
   }
 
