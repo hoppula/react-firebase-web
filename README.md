@@ -332,6 +332,10 @@ If you set `metadata` prop as true, provided object will also include `metadata`
 </Download>
 ```
 
+## React Hooks
+
+This project will be likely rewritten using [hooks](https://reactjs.org/docs/hooks-intro.html) soon, but it will still provide current render prop components as an alternative.
+
 ## Firestore
 
 Firestore support is in progress, no ETA yet.
