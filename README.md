@@ -59,6 +59,7 @@ yarn add react-firebase-web
   apiKey="your-api-key"
   projectId="your-project-id"
   databaseUrl="your-database-url (optional)"
+  firebase={yourCustomFirebaseImplementation} // optional, allows using API compatible implementation, e.g. firebase-mock for tests
 >
   <YourApp />
 </Firebase>
