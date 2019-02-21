@@ -2,3 +2,4 @@ src
 TODO
 .vscode
 .prettierrc
+tsconfig.json
