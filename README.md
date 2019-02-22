@@ -46,9 +46,15 @@ yarn add react-firebase-web
 </Firebase>
 ```
 
-## Codesandbox examples
+## CodeSandbox examples
 
-- Coming soon
+These CodeSandbox examples use `firebase-mock`, so feel free to mess around as any change is only applied locally and reseted after reload.
+
+- [Connected, shows Firebase connection status](https://codesandbox.io/embed/8zy4z1p8p0)
+- [Value, shows how to read and update single value](https://codesandbox.io/embed/91954r1x2r)
+- [Todos, shows to how to read and update list of values](https://codesandbox.io/embed/8kjp7n7pl2)
+- [Populate, shows how to populate related data given a list of ids](https://codesandbox.io/embed/r0zj7pq61o)
+- [Login and logout, shows how to login with email & OAuth, how to log out and how to show currently logged-in user](https://codesandbox.io/embed/7j646y17pj)
 
 ## Components
 
