@@ -1,4 +1,5 @@
 export { default as Firebase } from "./components/Firebase"
+export { FirebaseContext } from "./components/FirebaseContext"
 export { default as Connected } from "./components/Connected"
 export { default as Download } from "./components/Download"
 export { default as EmailLogin } from "./components/EmailLogin"
