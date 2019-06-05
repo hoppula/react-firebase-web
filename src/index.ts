@@ -17,3 +17,4 @@ export { default as Write } from "./components/Write"
 
 // Hooks
 export { useConnected } from "./hooks/useConnected"
+export { useUser } from "./hooks/useUser"
