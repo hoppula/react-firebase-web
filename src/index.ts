@@ -1,3 +1,4 @@
+// Components
 export { default as Firebase } from "./components/Firebase"
 export { FirebaseContext } from "./components/FirebaseContext"
 export { default as Connected } from "./components/Connected"
@@ -13,3 +14,6 @@ export { default as Upload } from "./components/Upload"
 export { default as User } from "./components/User"
 export { default as Value } from "./components/Value"
 export { default as Write } from "./components/Write"
+
+// Hooks
+export { useConnected } from "./hooks/useConnected"
