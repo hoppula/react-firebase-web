@@ -2,30 +2,7 @@ import firebase from "firebase/app"
 import PropTypes from "prop-types"
 import React from "react"
 import { FirebaseContext } from "./FirebaseContext"
-
-export interface AuthProviders {
-  facebook: "FacebookAuthProvider"
-  github: "GithubAuthProvider"
-  google: "GoogleAuthProvider"
-  twitter: "TwitterAuthProvider"
-}
-
-export interface AuthFlows {
-  popup: "signInWithPopup"
-  redirect: "signInWithRedirect"
-}
-
-const authProviders: AuthProviders = {
-  facebook: "FacebookAuthProvider",
-  github: "GithubAuthProvider",
-  google: "GoogleAuthProvider",
-  twitter: "TwitterAuthProvider"
-}
-
-const authFlows: AuthFlows = {
-  popup: "signInWithPopup",
-  redirect: "signInWithRedirect"
-}
+import { authProviders, authFlows } from "../authentication"
 
 export interface OAuthProps {
   readonly flow?: "popup" | "redirect"

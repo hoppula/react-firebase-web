@@ -6,3 +6,15 @@ export type FirebaseCallback = (
 ) => any
 
 export type RefType = firebase.database.Reference | firebase.database.Query
+
+export interface AuthProviders {
+  facebook: "FacebookAuthProvider"
+  github: "GithubAuthProvider"
+  google: "GoogleAuthProvider"
+  twitter: "TwitterAuthProvider"
+}
+
+export interface AuthFlows {
+  popup: "signInWithPopup"
+  redirect: "signInWithRedirect"
+}
